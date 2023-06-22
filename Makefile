@@ -1,21 +1,20 @@
-CC = gcco
+CC = gcc
 CFLAGS = -Wall
 
 SRCDIR = src
-OBJDIR = obj
+SRCS = $(wildcard $(SRCDIR)/*.c)
+OBJS = $(SRCS:.c=.o)
+EXEC = main
 
-SOURCES = $(wildcard $(SRCDIR)/*.c)
-OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
+.PHONY: all clean
 
-EXECUTABLE = program
+all: $(EXEC)
 
-all: $(EXECUTABLE)
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $(EXECUTABLE)
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+$(SRCDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJDIR)/*.o $(EXECUTABLE)
+	rm -f $(OBJS) $(EXEC)
